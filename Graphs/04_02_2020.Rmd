@@ -1,0 +1,91 @@
+---
+title: "04_02_2020"
+author: "Yihuan Huang"
+date: "4/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(RColorBrewer)
+library(dplyr)
+library(tibble)
+library(stringr)
+library(ggplot2)
+library(grid)
+library(scales)
+library(fmsb)
+```
+
+```{r}
+df <- read.csv("speed_dating_clean.csv")
+df_cleaned <- read.csv("df_cleaned_expnum.csv")
+highexp <- df_cleaned[df_cleaned$expnum >= 10, ]
+lowexp <- df_cleaned[df_cleaned$expnum <= 5, ]
+```
+
+```{r}
+attr <- summary(highexp$attr3_1)[4]
+sinc <- summary(highexp$sinc3_1)[4]
+fun <- summary(highexp$fun3_1)[4]
+intel <- summary(highexp$intel3_1)[4]
+amb <- summary(highexp$amb3_1)[4]
+highexp_data <-cbind(attr, sinc, fun, intel, amb)
+
+attr1 <- summary(df$attr3_1)[4]
+sinc1 <- summary(df$sinc3_1)[4]
+fun1 <- summary(df$fun3_1)[4]
+intel1 <- summary(df$intel3_1)[4]
+amb1 <- summary(df$amb3_1)[4]
+data <-cbind(attr1, sinc1, fun1, intel1, amb1)
+
+highexp_data <- as.data.frame(rbind(highexp_data, data))
+colnames(highexp_data) <- c("Attractive", "Sincere", "Fun", "Intelligent", "Ambitious")
+highexp_data <-rbind(rep(22,5) , rep(16,5), highexp_data)
+radarchart(highexp_data, pty = 32,
+           axistype = 1,
+           pcol = c(adjustcolor("#666699", 0.3), adjustcolor("#00CC66", 0.5)),
+           pfcol = c(adjustcolor("#666699", 0.3), adjustcolor("#00CC66", 0.5)),
+           plty = 1,
+           plwd = 3,
+           cglty = 1,
+           cglcol = "gray88",
+           centerzero = TRUE,
+           seg = 3,
+           vlcex = 0.9,
+           caxislabels = c("16","18","20","22"),
+           calcex = 0.8,
+           axislabcol = "gray",
+           palcex = 0.75)
+legend("topright", 
+       c("Self-Ratings of Participants 
+         who expected to have >= 10 matches", "Average Self-Ratings of all Participants"),
+       fill = c(adjustcolor("#666699", 0.3), adjustcolor("#00CC66", 0.5)), bty = "n", cex = 0.75)
+```
+
+```{r}
+data <- c(2, 4, 1, 5, 4)
+max <- rep(5, 5)
+min <- rep(0, 5)
+df <- as.data.frame(rbind(max, min, data))
+colnames(df) <- c("Supplier", "Rivalry", "Buyer", "New Entrants", "Substitute")
+radarchart(df, pty = 32,
+           axistype = 1,
+           pcol = adjustcolor("red", 0.5),
+           pfcol = adjustcolor("red", 0.5),
+           plty = 1,
+           plwd = 3,
+           cglty = 1,
+           cglcol = "gray88",
+           centerzero = TRUE,
+           seg = 5,
+           vlcex = 0.9,
+           caxislabels = c("0","1","2","3","4","5"),
+           calcex = 0.9,
+           axislabcol = "gray",
+           palcex = 0.75)
+```
+
